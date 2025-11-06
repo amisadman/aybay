@@ -2,7 +2,6 @@ package com.amisadman.aybaylite.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.amisadman.aybaylite.Controllers.ShowExpenseHelper;
-import com.amisadman.aybaylite.Controllers.ShowIncomeHelper;
 import com.amisadman.aybaylite.R;
-import com.amisadman.aybaylite.Repo.DatabaseHelper;
+import com.amisadman.aybaylite.Repo.DatabaseRepository;
+import com.amisadman.aybaylite.strategies.DataOperationStrategy;
+import com.amisadman.aybaylite.strategies.ExpenseOperationStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,17 +30,29 @@ public class ShowExpense extends AppCompatActivity {
     Button btnAddOther;
     ImageButton btnBack;
     LottieAnimationView noDataAnimation;
-    ShowExpenseHelper showExpenseHelper;
+
+    // Pattern implementations
+    private DatabaseRepository repository; // Singleton
+    private DataOperationStrategy operationStrategy; // Strategy
+
     ArrayList<HashMap<String, String>> arrayList;
     HashMap<String, String> hashMap;
     MyAdapter adapter;
-    DatabaseHelper dbhelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data);
 
+        initializeViews();
+        setupPatterns(); // Initialize Singleton and Strategy
+        setupRecyclerView();
+        setupClickListeners();
+
+        refreshData();
+    }
+
+    private void initializeViews() {
         recyclerView = findViewById(R.id.recyclerView);
         tvTitle = findViewById(R.id.tvTitle);
         noDataAnimation = findViewById(R.id.noDataAnimation);
@@ -51,28 +62,50 @@ public class ShowExpense extends AppCompatActivity {
         tvBalance = findViewById(R.id.tvBalance);
         tvTotal_show = findViewById(R.id.tvTotal_show);
 
-         dbhelper = new DatabaseHelper(this);
-        showExpenseHelper = new ShowExpenseHelper(dbhelper);
-
         tvTitle.setText("Expense Statement");
-        btnBack.setOnClickListener(v -> onBackPressed());
+    }
 
+    private void setupPatterns() {
+        // Singleton Pattern
+        repository = DatabaseRepository.getInstance(this);
+
+        // Strategy Pattern
+        operationStrategy = new ExpenseOperationStrategy(repository);
+    }
+
+    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MyAdapter();
         recyclerView.setAdapter(adapter);
-
-        refreshData();
     }
+
+    private void setupClickListeners() {
+        btnBack.setOnClickListener(v -> onBackPressed());
+
+        btnAddOther.setOnClickListener(v -> {
+            Intent intent = new Intent(ShowExpense.this, AddExpense.class);
+            startActivity(intent);
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        refreshData(); // Reload data when returning from edit
+        refreshData();
     }
 
     private void refreshData() {
-        arrayList = showExpenseHelper.loadExpense();
+        // Using Strategy pattern to load data
+        arrayList = operationStrategy.loadData();
         adapter.notifyDataSetChanged();
 
+        updateUI();
+
+        // Update totals
+        updateTotalAmount();
+    }
+
+    private void updateUI() {
         if (arrayList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             noDataAnimation.setVisibility(View.VISIBLE);
@@ -82,6 +115,18 @@ public class ShowExpense extends AppCompatActivity {
             noDataAnimation.setVisibility(View.GONE);
             tvNoDataMessage.setVisibility(View.GONE);
         }
+    }
+
+    private void updateTotalAmount() {
+        double total = 0;
+        for (HashMap<String, String> item : arrayList) {
+            try {
+                total += Double.parseDouble(item.get("amount"));
+            } catch (NumberFormatException e) {
+                // Handle parsing error
+            }
+        }
+        tvTotal_show.setText(String.format("Total: ৳%.2f", total));
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -114,28 +159,27 @@ public class ShowExpense extends AppCompatActivity {
             holder.tvTime.setText(formattedTime);
 
             holder.btnDeleteItem.setOnClickListener(v -> {
-                Log.d("ShowExpense","id is " + id);
-                boolean isDeleted = showExpenseHelper.deleteData(id);
+                // Using Strategy pattern to delete data
+                boolean isDeleted = operationStrategy.deleteData(id);
                 if (isDeleted) {
-                    arrayList.remove(position); // Remove the item from the current list
-                    notifyItemRemoved(position); // Better than notifyDataSetChanged()
-                    notifyItemRangeChanged(position, arrayList.size()); // Update positions
+                    arrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, arrayList.size());
 
-                    // If list is empty, show "No Data" message
-                    if (arrayList.isEmpty()) {
-                        recyclerView.setVisibility(View.GONE);
-                        noDataAnimation.setVisibility(View.VISIBLE);
-                        tvNoDataMessage.setVisibility(View.VISIBLE);
-                    }
+                    updateUI();
+                    updateTotalAmount();
+
+                    Toast.makeText(v.getContext(), "Expense deleted successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(v.getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Failed to delete expense", Toast.LENGTH_SHORT).show();
                 }
             });
 
+            double finalAmountValue = amountValue;
             holder.btnEditItem.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), AddExpense.class);
                 intent.putExtra("EDIT_ID", id);
-                intent.putExtra("EDIT_AMOUNT", String.valueOf(formattedAmount));
+                intent.putExtra("EDIT_AMOUNT", String.valueOf(finalAmountValue));
                 intent.putExtra("EDIT_REASON", reason);
                 v.getContext().startActivity(intent);
             });
