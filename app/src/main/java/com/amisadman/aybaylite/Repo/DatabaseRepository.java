@@ -10,11 +10,9 @@ import java.util.HashMap;
 public class DatabaseRepository {
     private static DatabaseRepository instance;
     private DatabaseHelper dbHelper;
-    private SQLiteDatabase database;
 
     private DatabaseRepository(Context context) {
         dbHelper = DatabaseHelper.getInstance(context);
-        database = dbHelper.getWritableDatabase();
     }
 
     public static synchronized DatabaseRepository getInstance(Context context) {
