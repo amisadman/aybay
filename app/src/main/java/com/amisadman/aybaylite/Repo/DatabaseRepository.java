@@ -26,33 +26,11 @@ public class DatabaseRepository {
 
     // Expense operations
     public ArrayList<HashMap<String, String>> loadAllExpenses() {
-        ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM expense", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("id", cursor.getString(0));
-                hashMap.put("amount", cursor.getString(1));
-                hashMap.put("reason", cursor.getString(2));
-                hashMap.put("time", cursor.getString(3));
-                arrayList.add(hashMap);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return arrayList;
+        return dbHelper.getAllExpenses();
     }
 
     public boolean deleteExpense(String id) {
-        return database.delete("expense", "id=?", new String[]{id}) > 0;
-    }
-
-    public long insertExpense(double amount, String reason, String time) {
-        ContentValues values = new ContentValues();
-        values.put("amount", amount);
-        values.put("reason", reason);
-        values.put("time", time);
-        return database.insert("expense", null, values);
+        return dbHelper.deleteExpense(id);
     }
 
     // Income operations

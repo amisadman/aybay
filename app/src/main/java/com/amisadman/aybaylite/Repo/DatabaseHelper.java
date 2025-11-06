@@ -290,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public int deleteExpense(String id) {
+    public boolean deleteExpense(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             // Use parameterized query with WHERE id = ?
@@ -301,10 +301,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             );
 
             Log.d("Database", "Deleted " + rowsAffected + " rows with id: " + id);
-            return rowsAffected;
+            return true;
         } catch (Exception e) {
             Log.e("Database", "Delete failed", e);
-            return 0;
+            return false;
         } finally {
             db.close();
         }
