@@ -309,10 +309,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
-    public void deleteIncome(String id){
+    public boolean deleteIncome(String id){
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from income where id like "+id);
+        try {
+            // Use parameterized query with WHERE id = ?
+            int rowsAffected = db.delete(
+                    "income",       // Table name
+                    "id = ?",        // WHERE clause
+                    new String[]{id} // WHERE value
+            );
+
+            Log.d("Database", "Deleted " + rowsAffected + " rows with id: " + id);
+            return true;
+        } catch (Exception e) {
+            Log.e("Database", "Delete failed", e);
+            return false;
+        } finally {
+            db.close();
+        }
     }
     public void deleteLoan(String id){
 

@@ -35,24 +35,10 @@ public class DatabaseRepository {
 
     // Income operations
     public ArrayList<HashMap<String, String>> loadAllIncomes() {
-        ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM income", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("id", cursor.getString(0));
-                hashMap.put("amount", cursor.getString(1));
-                hashMap.put("reason", cursor.getString(2));
-                hashMap.put("time", cursor.getString(3));
-                arrayList.add(hashMap);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return arrayList;
+        return dbHelper.getAllIncome();
     }
 
     public boolean deleteIncome(String id) {
-        return database.delete("income", "id=?", new String[]{id}) > 0;
+        return dbHelper.deleteIncome(id);
     }
 }
