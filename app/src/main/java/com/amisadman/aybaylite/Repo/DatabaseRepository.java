@@ -13,7 +13,7 @@ public class DatabaseRepository {
     private SQLiteDatabase database;
 
     private DatabaseRepository(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        dbHelper = DatabaseHelper.getInstance(context);
         database = dbHelper.getWritableDatabase();
     }
 

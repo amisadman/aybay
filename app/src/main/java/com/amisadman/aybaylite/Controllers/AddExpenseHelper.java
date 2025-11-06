@@ -13,7 +13,7 @@ public class AddExpenseHelper {
     }
 
     public AddExpenseHelper(Context context) {
-        this(new DatabaseHelper(context));
+        this(DatabaseHelper.getInstance(context));
     }
     public void updateData(String id, double amount, String reason){
         if(amount >= minimum && amount <= maximum)dbHelper.updateExpense(id, amount, reason);

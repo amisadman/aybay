@@ -17,10 +17,18 @@ import java.util.HashMap;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public DatabaseHelper(Context context) {
-        super(context, "aybay", null, 1);
+    private static DatabaseHelper instance;
+    private static Context appContext;
+    private DatabaseHelper(Context context) {
+        super(context.getApplicationContext(), "aybay", null, 1);
     }
-
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            appContext = context.getApplicationContext();
+            instance = new DatabaseHelper(appContext);
+        }
+        return instance;
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table expense(id INTEGER primary key autoincrement,amount DOUBLE,reason TEXT,time INTEGER)");

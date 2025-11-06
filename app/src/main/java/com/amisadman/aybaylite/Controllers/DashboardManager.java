@@ -18,7 +18,7 @@ public class DashboardManager {
 
     // Keep original constructor for production code
     public DashboardManager(Context context) {
-        this(new DatabaseHelper(context));
+        this(DatabaseHelper.getInstance(context));
     }
 
     public ArrayList<HashMap<String, String>> loadDataFromDatabase()
