@@ -17,10 +17,18 @@ import java.util.HashMap;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public DatabaseHelper(Context context) {
-        super(context, "aybay", null, 1);
+    private static DatabaseHelper instance;
+    private static Context appContext;
+    private DatabaseHelper(Context context) {
+        super(context.getApplicationContext(), "aybay", null, 1);
     }
-
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (instance == null) {
+            appContext = context.getApplicationContext();
+            instance = new DatabaseHelper(appContext);
+        }
+        return instance;
+    }
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table expense(id INTEGER primary key autoincrement,amount DOUBLE,reason TEXT,time INTEGER)");
@@ -282,7 +290,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public int deleteExpense(String id) {
+    public boolean deleteExpense(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             // Use parameterized query with WHERE id = ?
@@ -293,18 +301,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             );
 
             Log.d("Database", "Deleted " + rowsAffected + " rows with id: " + id);
-            return rowsAffected;
+            return true;
         } catch (Exception e) {
             Log.e("Database", "Delete failed", e);
-            return 0;
+            return false;
         } finally {
             db.close();
         }
     }
-    public void deleteIncome(String id){
+    public boolean deleteIncome(String id){
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from income where id like "+id);
+        try {
+            // Use parameterized query with WHERE id = ?
+            int rowsAffected = db.delete(
+                    "income",       // Table name
+                    "id = ?",        // WHERE clause
+                    new String[]{id} // WHERE value
+            );
+
+            Log.d("Database", "Deleted " + rowsAffected + " rows with id: " + id);
+            return true;
+        } catch (Exception e) {
+            Log.e("Database", "Delete failed", e);
+            return false;
+        } finally {
+            db.close();
+        }
     }
     public void deleteLoan(String id){
 

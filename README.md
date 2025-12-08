@@ -35,7 +35,7 @@ You can install AyBay Lite from:
 
 ## Architecture & Testing
 
-- Follows an MVC-ish layered architecture
+- Follows an Layered architecture
 - Controller classes handle logic (e.g., `AddExpenseHelper`, `DashboardManager`)
 - Data is stored locally using SQLite (`DatabaseHelper`)
 - Unit tests written using **JUnit 5** and **Mockito**
