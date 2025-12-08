@@ -28,19 +28,35 @@ A powerful and lightweight Android application for tracking income, expenses, bu
 
 You can install AyBay Lite from:
 
-[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/amisadman/aybay-lite/releases/tag/v1.0.0)
+[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/mdtahmidrahman/AyBay-FinanceTracker/releases/tag/v1.0.0)
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Download-green?logo=google-drive)](https://drive.google.com/file/d/1KUU8vM8rXXOHGKe-sdrNVdNx81QNTk0b/view?usp=sharing)
 
 ---
 
 ## Architecture & Testing
 
-- Follows an Layered architecture
+- Follows an MVC-ish layered architecture
 - Controller classes handle logic (e.g., `AddExpenseHelper`, `DashboardManager`)
 - Data is stored locally using SQLite (`DatabaseHelper`)
 - Unit tests written using **JUnit 5** and **Mockito**
 - Proper assertions (`assertEquals`, `assertThrows`, `verify`, etc.)
 - Sample test: Ensure invalid inputs throw `IllegalArgumentException`
+
+### Data Flow Diagram
+```mermaid
+graph TD
+    UI[Activities: Add/Show Data] -->|Calls| Facade[FinanceManager]
+    Facade -->|Delegates to| Strategy[Expense/Income Strategy]
+    Facade -->|Executes| Command[DeleteCommand]
+    Facade -->|Registers| Observer[TransactionObserver]
+    
+    Strategy -->|Persists to| DB[DatabaseHelper]
+    Command -->|Uses| Memento[TransactionMemento]
+    Command -->|Modifies| DB
+    
+    DB -->|Notifies| Observer
+    Observer -->|Updates| UI
+```
 
 ---
 
