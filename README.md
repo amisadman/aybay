@@ -45,17 +45,58 @@ You can install AyBay Lite from:
 ### Data Flow Diagram
 ```mermaid
 graph TD
-    UI[Activities: Add/Show Data] -->|Calls| Facade[FinanceManager]
-    Facade -->|Delegates to| Strategy[Expense/Income Strategy]
-    Facade -->|Executes| Command[DeleteCommand]
-    Facade -->|Registers| Observer[TransactionObserver]
-    
-    Strategy -->|Persists to| DB[DatabaseHelper]
-    Command -->|Uses| Memento[TransactionMemento]
-    Command -->|Modifies| DB
-    
+    subgraph "UI Layer"
+        UI_Trans[Transaction Activities]
+        UI_Auth[Login/Signup Activities]
+        UI_Chat[Walleo Chatbot]
+    end
+
+    subgraph "Facade Layer"
+        FinMgr[FinanceManager]
+        AuthMgr[AuthFacade]
+    end
+
+    subgraph "Repository / Strategy Layer"
+        Repo[DatabaseRepository]
+        Strategy[Expense/Income Strategy]
+    end
+
+    subgraph "Business Logic / Patterns"
+        Command[DeleteCommand]
+        Memento[TransactionMemento]
+        Observer[TransactionObserver]
+        Factory[TransactionFactory]
+    end
+
+    subgraph "Data Layer"
+        DB[DatabaseHelper]
+        ExtAPI[Gemini API]
+    end
+
+    %% Transaction Flow
+    UI_Trans -->|Calls| FinMgr
+    FinMgr -->|Delegates to| Repo
+    Repo -->|Uses| Strategy
+    Strategy -->|Persists Insert Update| DB
+
+    FinMgr -->|Executes| Command
+    FinMgr -->|Uses| Factory
+    FinMgr -->|Registers| Observer
+
+    Command -->|Uses| Memento
+    Command -->|Modifies Delete Restore| DB
+
     DB -->|Notifies| Observer
-    Observer -->|Updates| UI
+    Observer -->|Updates| UI_Trans
+
+    %% Authentication Flow
+    UI_Auth -->|Calls| AuthMgr
+    AuthMgr -->|Queries/Updates| DB
+
+    %% Chatbot Flow
+    UI_Chat -->|Streams| ExtAPI
+    UI_Chat -->|Saves History| DB
+
 ```
 
 ---
