@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.amisadman.aybaylite.R;
 import com.amisadman.aybaylite.Repo.DatabaseRepository;
-import com.amisadman.aybaylite.strategies.DataOperationStrategy;
-import com.amisadman.aybaylite.strategies.ExpenseOperationStrategy;
+import com.amisadman.aybaylite.patterns.strategy.DataOperationStrategy;
+import com.amisadman.aybaylite.patterns.strategy.ExpenseOperationStrategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
