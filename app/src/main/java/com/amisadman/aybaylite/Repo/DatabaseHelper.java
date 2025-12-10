@@ -54,7 +54,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //====================================================================================
 
-    public void addExpense(double amount,String reason){
+    public void addExpense(double amount, String reason, long time){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues conval = new ContentValues();
@@ -66,7 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void addIncome(double amount,String reason){
+    public void addIncome(double amount, String reason, long time){
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues conval = new ContentValues();
@@ -352,7 +352,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //=====================================================================================
-    public void updateExpense(String id, double amount, String reason) {
+    public void updateExpense(String id, double amount, String reason, long time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("amount", amount);
@@ -360,7 +360,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update("expense", contentValues, "id = ?", new String[]{id});
     }
 
-    public void updateIncome(String id, double amount, String reason) {
+    public void updateIncome(String id, double amount, String reason, long time) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("amount", amount);

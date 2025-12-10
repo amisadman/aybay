@@ -102,6 +102,20 @@
                     android:textColor="@color/black"
                     android:backgroundTint="@color/white"
                     android:layout_marginBottom="20dp"/>
+                <EditText
+                    android:id="@+id/edDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/customedittext"
+                    android:drawableStart="@drawable/baseline_calendar_today_24"
+                    android:drawablePadding="9dp"
+                    android:hint="Select Date &amp; Time (Optional)"
+                    android:padding="12dp"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginBottom="20dp"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
