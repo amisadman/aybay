@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/login_activity"
     android:background="@color/white"
-    tools:context=".LoginActivity">
+    tools:context=".Activities.LoginActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -59,7 +60,7 @@
                     android:inputType="numberPassword"
                     android:textColor="@color/black"
                     android:backgroundTint="@color/white"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="20dp" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/login_button"
                     style="@style/Widget.MaterialComponents.Button"
@@ -72,30 +73,8 @@
                     app:strokeWidth="4dp"
                     app:backgroundTint="@color/black"
                     android:textColor="@color/white"
-                    android:layout_marginBottom="20dp"/>
-                <LinearLayout
-                    android:id="@+id/signup_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:visibility="visible">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="Not registered?"
-                        android:textSize="14sp"/>
-                    <TextView
-                        android:id="@+id/signupRedirectText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=" Register Now"
-                        android:textSize="14sp"
-                        android:textColor="@color/blue"
-                        android:textStyle="bold"
-                        android:clickable="true"/>
-                </LinearLayout>
+                    android:layout_marginBottom="20dp" />
+
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
