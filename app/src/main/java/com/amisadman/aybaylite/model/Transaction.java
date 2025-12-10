@@ -1,6 +1,8 @@
 package com.amisadman.aybaylite.model;
 
-public abstract class Transaction
+import com.amisadman.aybaylite.patterns.composite.TransactionComponent;
+
+public abstract class Transaction implements TransactionComponent
 {
     protected String id;
     protected double amount;
@@ -38,6 +40,16 @@ public abstract class Transaction
     public void setReason(String reason)
     {
         this.reason = reason;
+    }
+
+    @Override
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String getDetails() {
+        return reason + ": " + amount;
     }
 
 }
