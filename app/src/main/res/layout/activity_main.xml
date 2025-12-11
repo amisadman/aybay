@@ -344,7 +344,77 @@
                         android:gravity="center"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
+            </LinearLayout>
+            <!-- Second Row: Search and Local Backup -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10"
+                android:layout_marginTop="10dp"
+                android:gravity="center">
 
+                <LinearLayout
+                    android:id="@+id/btnSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/button_background"
+                    android:padding="6dp"
+                    android:background="@drawable/ripple_rounded_button">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@null"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/search"
+                        android:contentDescription="Search" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Search"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_marginStart="2dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:id="@+id/btnManageLocal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/button_background"
+                    android:padding="6dp"
+                    android:background="@drawable/ripple_rounded_button">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@null"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/local"
+                        android:contentDescription="Backup &amp; Restore" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Backup &amp; Restore"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/black"
+                        android:gravity="center"
+                        android:layout_marginStart="2dp"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
