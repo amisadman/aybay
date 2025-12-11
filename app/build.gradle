@@ -38,6 +38,12 @@ android {
             resources.srcDirs += ['src/test/resources']
         }
     }
+
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+        }
+    }
 }
 
 dependencies {
@@ -60,4 +66,13 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.airbnb.android:lottie:6.6.6'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    implementation 'io.noties.markwon:core:4.6.2'
+
+    // Google Drive API
+    implementation 'com.google.android.gms:play-services-auth:21.0.0'
+    implementation 'com.google.api-client:google-api-client-android:2.2.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev20230822-2.0.0'
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

@@ -9,99 +9,134 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.amisadman.aybaylite.Controllers.AddExpenseHelper;
 import com.amisadman.aybaylite.R;
-import com.amisadman.aybaylite.Repo.DatabaseHelper;
+import com.amisadman.aybaylite.model.Transaction;
+import com.amisadman.aybaylite.patterns.facade.FinanceManager;
+import com.amisadman.aybaylite.patterns.factory.TransactionFactory;
 
 public class AddExpense extends AppCompatActivity {
     TextView tvTitle;
-    EditText edAmount, edReason;
+    EditText edAmount, edReason, edDate;
+    java.util.Calendar calendar = java.util.Calendar.getInstance();
     Button button;
     ImageButton btnBack;
-    AddExpenseHelper helper;
     LottieAnimationView animationAdd, animationUpdate;
     String editId = null;
     boolean isEdit = false;
+    FinanceManager financeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_data);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.add_data_activity), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Initialize Facade
+        financeManager = FinanceManager.getInstance(this);
+        financeManager.setStrategyType("EXPENSE"); // Set strategy for this activity context
+
         btnBack = findViewById(R.id.btnBack);
         tvTitle = findViewById(R.id.tvTitle);
         edAmount = findViewById(R.id.edAmount);
         edReason = findViewById(R.id.edReason);
+        edDate = findViewById(R.id.edDate);
         button = findViewById(R.id.button);
         animationAdd = findViewById(R.id.animationAdd);
         animationUpdate = findViewById(R.id.animationUpdate);
-        helper = new AddExpenseHelper(this);
+
         Intent intent = getIntent();
-        /*Edit Data
-        Edit button theke ekhane ashe.
-        */
-        if (intent.hasExtra("EDIT_ID"))
-        {
+        if (intent.hasExtra("EDIT_ID")) {
             isEdit = true;
             editId = intent.getStringExtra("EDIT_ID");
             edAmount.setText(intent.getStringExtra("EDIT_AMOUNT"));
             edReason.setText(intent.getStringExtra("EDIT_REASON"));
+
+            long time = intent.getLongExtra("EDIT_TIME", 0);
+            if (time != 0) {
+                calendar.setTimeInMillis(time);
+                updateLabel();
+            }
+
             tvTitle.setText("Edit Expense");
 
             animationUpdate.setVisibility(View.VISIBLE);
             animationAdd.setVisibility(View.GONE);
             button.setText("Update");
-        }
-        else
-        {
-            // Add Data
+        } else {
             tvTitle.setText("Add Expense");
-
             animationUpdate.setVisibility(View.GONE);
             animationAdd.setVisibility(View.VISIBLE);
+            // Default to current time for new entry
+            calendar = java.util.Calendar.getInstance();
+            updateLabel();
         }
+
+        edDate.setOnClickListener(v -> {
+            new android.app.DatePickerDialog(AddExpense.this, (view, year, month, dayOfMonth) -> {
+                calendar.set(java.util.Calendar.YEAR, year);
+                calendar.set(java.util.Calendar.MONTH, month);
+                calendar.set(java.util.Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                new android.app.TimePickerDialog(AddExpense.this, (view1, hourOfDay, minute) -> {
+                    calendar.set(java.util.Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendar.set(java.util.Calendar.MINUTE, minute);
+                    updateLabel();
+                }, calendar.get(java.util.Calendar.HOUR_OF_DAY), calendar.get(java.util.Calendar.MINUTE), false).show();
+            }, calendar.get(java.util.Calendar.YEAR), calendar.get(java.util.Calendar.MONTH),
+                    calendar.get(java.util.Calendar.DAY_OF_MONTH)).show();
+        });
+
         btnBack.setOnClickListener(v -> onBackPressed());
-        button.setOnClickListener(v ->
-        {
+        button.setOnClickListener(v -> {
             String sAmount = edAmount.getText().toString();
             String reason = edReason.getText().toString();
 
-            // Input validation
-            if (sAmount.isEmpty() || reason.isEmpty())
-            {
+            if (sAmount.isEmpty() || reason.isEmpty()) {
                 Toast.makeText(AddExpense.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
             double amount = Double.parseDouble(sAmount);
+            long time = calendar.getTimeInMillis();
 
-            if (isEdit)
-            {
-                //Update korbe
-                helper.updateData(editId, amount, reason);
-                finish();
-                Toast.makeText(AddExpense.this, "Entry Updated!", Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                //Notun add
-                helper.addData(amount, reason);
-                Toast.makeText(AddExpense.this, "Expense Added!", Toast.LENGTH_SHORT).show();
-                finish();
+            try {
+                if (isEdit) {
+                    Transaction t = TransactionFactory.createTransaction("EXPENSE", editId, amount, reason, time);
+                    financeManager.updateTransaction(t);
+                    Toast.makeText(AddExpense.this, "Entry Updated!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Transaction t = TransactionFactory.createTransaction("EXPENSE", null, amount, reason, time);
+                    financeManager.addTransaction(t);
+                    Toast.makeText(AddExpense.this, "Expense Added!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            } catch (IllegalArgumentException e) {
+                Toast.makeText(AddExpense.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(AddExpense.this, "Operation failed", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         });
-
     }
-    // back press
+
+    private void updateLabel() {
+        String myFormat = "dd-MM-yyyy hh:mm:ss a";
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(myFormat, java.util.Locale.getDefault());
+        edDate.setText(sdf.format(calendar.getTime()));
+    }
+
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
     }
-
 }

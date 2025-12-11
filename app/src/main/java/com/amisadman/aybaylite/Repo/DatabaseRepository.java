@@ -1,42 +1,59 @@
 package com.amisadman.aybaylite.Repo;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import java.util.ArrayList;
-import java.util.HashMap;
+
+import com.amisadman.aybaylite.patterns.observer.TransactionObserver;
+import com.amisadman.aybaylite.model.Transaction;
+import com.amisadman.aybaylite.patterns.strategy.DataOperationStrategy;
+
+import java.util.List;
 
 public class DatabaseRepository {
-    private static DatabaseRepository instance;
-    private DatabaseHelper dbHelper;
+    private final DataOperationStrategy dataOperationStrategy;
+    private List<TransactionObserver> observers = new java.util.ArrayList<>();
 
-    private DatabaseRepository(Context context) {
-        dbHelper = DatabaseHelper.getInstance(context);
+    public DatabaseRepository(DataOperationStrategy dataOperationStrategy) {
+        this.dataOperationStrategy = dataOperationStrategy;
     }
 
-    public static synchronized DatabaseRepository getInstance(Context context) {
-        if (instance == null) {
-            instance = new DatabaseRepository(context);
+    // Observer Pattern: Attach
+    public void addObserver(TransactionObserver observer) {
+        observers.add(observer);
+    }
+
+    // Observer Pattern: Notify
+    private void notifyObservers() {
+        for (TransactionObserver observer : observers) {
+            observer.onDataChanged();
         }
-        return instance;
     }
 
-    // Expense operations
-    public ArrayList<HashMap<String, String>> loadAllExpenses() {
-        return dbHelper.getAllExpenses();
+    public List<Transaction> loadTransactions(Context context) {
+        if (dataOperationStrategy == null)
+            throw new IllegalStateException("Strategy not set");
+        return dataOperationStrategy.loadTransactions(context);
     }
 
-    public boolean deleteExpense(String id) {
-        return dbHelper.deleteExpense(id);
+    public boolean deleteTransaction(Context context, String id) {
+        if (dataOperationStrategy == null)
+            throw new IllegalStateException("Strategy not set");
+        boolean result = dataOperationStrategy.deleteTransaction(context, id);
+        if (result)
+            notifyObservers(); // Notify on change
+        return result;
     }
 
-    // Income operations
-    public ArrayList<HashMap<String, String>> loadAllIncomes() {
-        return dbHelper.getAllIncome();
+    public void addData(Context context, Transaction transaction) {
+        if (dataOperationStrategy == null)
+            throw new IllegalStateException("Strategy not set");
+        dataOperationStrategy.addTransaction(context, transaction);
+        notifyObservers(); // Notify on change
     }
 
-    public boolean deleteIncome(String id) {
-        return dbHelper.deleteIncome(id);
+    public void updateData(Context context, Transaction transaction) {
+        if (dataOperationStrategy == null)
+            throw new IllegalStateException("Strategy not set");
+        dataOperationStrategy.updateTransaction(context, transaction);
+        notifyObservers(); // Notify on change
     }
 }

@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.amisadman.aybaylite.Controllers.DashboardManager;
 import com.amisadman.aybaylite.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,12 +68,33 @@ public class MainActivity extends AppCompatActivity {
 
         manager = new DashboardManager(this);
 
+        // Set username
+        String username = getIntent().getStringExtra("USERNAME");
+        if (username != null) {
+            tvUsername.setText("Hi, " + username + "!");
+        } else {
+
+            tvUsername.setText("Hi, User!");
+        }
+
         // Set click listeners
         btnAddExpense.setOnClickListener(v -> startActivity(new Intent(this, AddExpense.class)));
         btnAddIncome.setOnClickListener(v -> startActivity(new Intent(this, AddIncome.class)));
         btnShowAllDataExpense.setOnClickListener(v -> startActivity(new Intent(this, ShowExpense.class)));
         btnShowAllDataIncome.setOnClickListener(v -> startActivity(new Intent(this, ShowIncome.class)));
         btnLogout.setOnClickListener(v -> finish());
+
+        FloatingActionButton btnWalleoChat = findViewById(R.id.btnWalleoChat);
+        btnWalleoChat.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, WalleoActivity.class)));
+        LinearLayout btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SearchActivity.class));
+        });
+
+        LinearLayout btnManageLocal = findViewById(R.id.btnManageLocal);
+        btnManageLocal.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, ManageLocalActivity.class));
+        });
 
         // Setup RecyclerView
         setupRecyclerView();
@@ -105,7 +127,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-        public MyAdapter() {}
+        public MyAdapter() {
+        }
 
         public static class MyViewHolder extends RecyclerView.ViewHolder {
             TextView tvReason_main, tvAmount_main, tvTime_main;
@@ -115,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 tvReason_main = itemView.findViewById(R.id.tvReason_main);
                 tvAmount_main = itemView.findViewById(R.id.tvAmount_main);
                 tvTime_main = itemView.findViewById(R.id.tvTime_main);
-
 
             }
         }

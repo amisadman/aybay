@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/manage_local_activity"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManageLocalActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="16dp">
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="3dp"
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:foregroundGravity="left"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back" />
+        <TextView
+            android:id="@+id/tvBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Backup and Restore"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/brown" />
+        <LinearLayout
+            android:id="@+id/btnLocalBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvBackup"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16px"
+            android:foreground="@drawable/button_background"
+            android:background="@drawable/ripple_rounded_button"
+            android:clickable="true"
+            android:focusable="true"
+            app:cornerRadius="20dp">
+            <ImageView
+                android:id="@+id/iconLocalBackup"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/local_backup"
+                android:contentDescription="Local Backup" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Local Backup"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:textAllCaps="false" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnLocalRestore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnLocalBackup"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16px"
+            android:foreground="@drawable/button_background"
+            android:background="@drawable/ripple_rounded_button"
+            android:clickable="true"
+            android:focusable="true"
+            app:cornerRadius="20dp">
+            <ImageView
+                android:id="@+id/iconLocalRestore"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/local_restore"
+                android:contentDescription="Restore from storage" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Restore from storage"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textStyle="normal" />
+        </LinearLayout>
+
+        <!-- Cloud Backup Button -->
+        <LinearLayout
+            android:id="@+id/btnCloudBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnLocalRestore"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16px"
+            android:foreground="@drawable/button_background"
+            android:background="@drawable/ripple_rounded_button"
+            android:clickable="true"
+            android:focusable="true"
+            app:cornerRadius="20dp">
+            <ImageView
+                android:id="@+id/iconCloud"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/backup"
+                android:contentDescription="Manage Cloud Backup" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Manage Cloud Backup"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textStyle="normal" />
+        </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/backupAnimation"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:lottie_rawRes="@raw/restore"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            />
+        <TextView
+            android:id="@+id/tvTotal_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Backup Path: Download/database_backup.json Or Documents/database_backup.json"
+            android:textColor="@color/black"
+            android:layout_below="@+id/backupAnimation"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+</RelativeLayout>
