@@ -26,7 +26,7 @@ A powerful and lightweight Android application for tracking income, expenses, bu
 
 You can install AyBay from:
 
-[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/amisadman/aybay-lite/releases/tag/v1.0.0)
+[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/mdtahmidrahman/AyBay-FinanceTracker/releases/tag/v1.0.0)
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Download-green?logo=google-drive)](https://drive.google.com/file/d/1KUU8vM8rXXOHGKe-sdrNVdNx81QNTk0b/view?usp=sharing)
 
 ---
@@ -104,6 +104,63 @@ graph TD
 - **Adapter Pattern**: `CurrencyAdapter` and `DateAdapter` transform data formats to be compatible with UI requirements.
 - **Memento Pattern**: Support for capturing and restoring object state (e.g., for Undo functionality).
 - **Singleton Pattern**: Ensures crucial classes like `FinanceManager` and `DatabaseHelper` have a single shared instance.
+
+### Data Flow Diagram
+```mermaid
+graph TD
+    subgraph "UI Layer"
+        UI_Trans[Transaction Activities]
+        UI_Auth[Login/Signup Activities]
+        UI_Chat[Walleo Chatbot]
+    end
+
+    subgraph "Facade Layer"
+        FinMgr[FinanceManager]
+        AuthMgr[AuthFacade]
+    end
+
+    subgraph "Repository / Strategy Layer"
+        Repo[DatabaseRepository]
+        Strategy[Expense/Income Strategy]
+    end
+
+    subgraph "Business Logic / Patterns"
+        Command[DeleteCommand]
+        Memento[TransactionMemento]
+        Observer[TransactionObserver]
+        Factory[TransactionFactory]
+    end
+
+    subgraph "Data Layer"
+        DB[DatabaseHelper]
+        ExtAPI[Gemini API]
+    end
+
+    %% Transaction Flow
+    UI_Trans -->|Calls| FinMgr
+    FinMgr -->|Delegates to| Repo
+    Repo -->|Uses| Strategy
+    Strategy -->|Persists Insert Update| DB
+
+    FinMgr -->|Executes| Command
+    FinMgr -->|Uses| Factory
+    FinMgr -->|Registers| Observer
+
+    Command -->|Uses| Memento
+    Command -->|Modifies Delete Restore| DB
+
+    DB -->|Notifies| Observer
+    Observer -->|Updates| UI_Trans
+
+    %% Authentication Flow
+    UI_Auth -->|Calls| AuthMgr
+    AuthMgr -->|Queries/Updates| DB
+
+    %% Chatbot Flow
+    UI_Chat -->|Streams| ExtAPI
+    UI_Chat -->|Saves History| DB
+
+```
 
 ---
 
