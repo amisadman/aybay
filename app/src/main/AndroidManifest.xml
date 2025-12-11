@@ -13,6 +13,10 @@
         android:theme="@style/Theme.AybayLite"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.WalleoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".Activities.LoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>

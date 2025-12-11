@@ -399,4 +399,16 @@
                 android:visibility="visible" />
         </RelativeLayout>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnWalleoChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_walleo"
+        android:contentDescription="Chat with Walleo"
+        app:backgroundTint="#FFFFFF"
+        app:tint="@null"
+        android:elevation="6dp"/>
 </RelativeLayout>

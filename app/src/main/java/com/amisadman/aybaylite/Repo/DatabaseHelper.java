@@ -40,20 +40,98 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("create table owe(id INTEGER primary key autoincrement,amount DOUBLE,reason TEXT,time INTEGER)");
         db.execSQL("create table savings(id INTEGER primary key autoincrement,amount DOUBLE,reason TEXT,time INTEGER)");
         db.execSQL("create table budget(id INTEGER primary key autoincrement,amount DOUBLE,reason TEXT,time INTEGER)");
-        db.execSQL(
-                "CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT UNIQUE, password TEXT)");
+        db.execSQL("CREATE TABLE users(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT UNIQUE, password TEXT)");
+
+        // Chat Tables
+        createChatTables(db);
 
     }
 
+    private void createChatTables(SQLiteDatabase db)
+    {
+        db.execSQL("CREATE TABLE chat_sessions(session_id TEXT PRIMARY KEY, title TEXT, last_updated INTEGER)");
+        db.execSQL("CREATE TABLE chat_messages(id INTEGER PRIMARY KEY AUTOINCREMENT, session_id TEXT, message TEXT, sender TEXT, timestamp INTEGER)");
+    }
+
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists expense");
-        db.execSQL("drop table if exists income");
-        db.execSQL("drop table if exists loan");
-        db.execSQL("drop table if exists owe");
-        db.execSQL("drop table if exists savings");
-        db.execSQL("drop table if exists budget");
-        db.execSQL("drop Table if exists users");
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        if(oldVersion < 2) { createChatTables(db); }
+    }
+
+    // ================= Chat Methods =================
+    public void createSession(String sessionId, String title)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("session_id", sessionId);
+        values.put("title", title);
+        values.put("last_updated", System.currentTimeMillis());
+        db.insert("chat_sessions", null, values);
+    }
+
+    public void addMessage(String sessionId, String message, String sender)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("session_id", sessionId);
+        values.put("message", message);
+        values.put("sender", sender);
+        values.put("timestamp", System.currentTimeMillis());
+        db.insert("chat_messages", null, values);
+
+        // Update session timestamp
+        ContentValues sessionValues = new ContentValues();
+        sessionValues.put("last_updated", System.currentTimeMillis());
+        db.update("chat_sessions", sessionValues, "session_id = ?", new String[] { sessionId });
+    }
+
+    public ArrayList<HashMap<String, String>> getChatHistory()
+    {
+        ArrayList<HashMap<String, String>> history = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM chat_sessions ORDER BY last_updated DESC", null);
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String, String> session = new HashMap<>();
+                session.put("session_id", cursor.getString(cursor.getColumnIndexOrThrow("session_id")));
+                session.put("title", cursor.getString(cursor.getColumnIndexOrThrow("title")));
+                session.put("last_updated", cursor.getString(cursor.getColumnIndexOrThrow("last_updated")));
+                history.add(session);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }
+        return history;
+    }
+
+    public ArrayList<HashMap<String, String>> getMessages(String sessionId)
+    {
+        ArrayList<HashMap<String, String>> messages = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM chat_messages WHERE session_id = ? ORDER BY timestamp ASC", new String[] { sessionId });
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                HashMap<String, String> msg = new HashMap<>();
+                msg.put("message", cursor.getString(cursor.getColumnIndexOrThrow("message")));
+                msg.put("sender", cursor.getString(cursor.getColumnIndexOrThrow("sender")));
+                messages.add(msg);
+            }
+            while (cursor.moveToNext());
+            cursor.close();
+        }
+        return messages;
+    }
+
+    public void deleteSession(String sessionId)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("chat_sessions", "session_id = ?", new String[] { sessionId });
+        db.delete("chat_messages", "session_id = ?", new String[] { sessionId });
     }
 
     // ====================================================================================
