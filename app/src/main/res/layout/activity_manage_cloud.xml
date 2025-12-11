@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/manage_cloud_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Activities.ManageCloudActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="16dp">
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="3dp"
+            android:padding="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="Back"
+            android:focusable="true"
+            android:foregroundGravity="left"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_back" />
+
+        <!-- Sign in and Upload Backup -->
+        <TextView
+            android:id="@+id/tvmanagecloud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Manage Cloud Data"
+            android:textAlignment="center"
+            android:textColor="@color/brown"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/btnDriveBackup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvmanagecloud"
+            android:layout_marginTop="25dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16px"
+            android:foreground="@drawable/button_background"
+            android:background="@drawable/ripple_rounded_button"
+            android:clickable="true"
+            android:focusable="true"
+            app:cornerRadius="20dp">
+            <ImageView
+                android:id="@+id/iconDriveBackup"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/google_drive"
+                android:contentDescription="Sign in and Upload Backup" />
+            <TextView
+                android:id="@+id/tvDriveBackupText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Upload to Google Drive"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:textAllCaps="false" />
+        </LinearLayout>
+        <!-- Restore from Google Drive -->
+        <LinearLayout
+            android:id="@+id/btnDriveRestore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnDriveBackup"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16px"
+            android:foreground="@drawable/button_background"
+            android:background="@drawable/ripple_rounded_button"
+            android:clickable="true"
+            android:focusable="true"
+            app:cornerRadius="10dp">
+            <ImageView
+                android:id="@+id/iconDriveRestore"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/google_drive"
+                android:contentDescription="Restore from Google Drive" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Restore from Google Drive"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textStyle="normal" />
+        </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/backupAnimation"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:lottie_rawRes="@raw/backup"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            />
+        <TextView
+            android:id="@+id/tvTotal_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local Backup Path: \nDownload/database_backup.json Or \nDocuments/database_backup.json\n\nDrive Backup Path: MyDrive/database_backup.json"
+            android:textColor="@color/black"
+            android:layout_below="@+id/backupAnimation"
+            android:layout_centerHorizontal="true"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/nb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This feature is still in testing. If the drive restore fails, try download and restore manually."
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:maxWidth="300dp"
+            android:lineSpacingExtra="4dp"
+            android:layout_below="@id/tvTotal_show"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"/>
+    </RelativeLayout>
+</RelativeLayout>

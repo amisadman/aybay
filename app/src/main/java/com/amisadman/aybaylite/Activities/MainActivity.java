@@ -85,7 +85,16 @@ public class MainActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(v -> finish());
 
         FloatingActionButton btnWalleoChat = findViewById(R.id.btnWalleoChat);
-        btnWalleoChat.setOnClickListener(v -> startActivity(new Intent(this, WalleoActivity.class)));
+        btnWalleoChat.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, WalleoActivity.class)));
+        LinearLayout btnSearch = findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, SearchActivity.class));
+        });
+
+        LinearLayout btnManageLocal = findViewById(R.id.btnManageLocal);
+        btnManageLocal.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, ManageLocalActivity.class));
+        });
 
         // Setup RecyclerView
         setupRecyclerView();
