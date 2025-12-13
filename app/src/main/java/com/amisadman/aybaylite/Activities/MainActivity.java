@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
     static MyAdapter adapter;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,12 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Set username
         String username = getIntent().getStringExtra("USERNAME");
-        if (username != null) {
-            tvUsername.setText("Hi, " + username + "!");
-        } else {
+        tvUsername.setText(username + "!");
 
-            tvUsername.setText("Hi, User!");
-        }
 
         // Set click listeners
         btnAddExpense.setOnClickListener(v -> startActivity(new Intent(this, AddExpense.class)));
