@@ -26,8 +26,8 @@ A powerful and lightweight Android application for tracking income, expenses, bu
 
 You can install AyBay from:
 
-[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/mdtahmidrahman/AyBay-FinanceTracker/releases/tag/v1.0.0)
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-Download-green?logo=google-drive)](https://drive.google.com/file/d/1KUU8vM8rXXOHGKe-sdrNVdNx81QNTk0b/view?usp=sharing)
+[![GitHub](https://img.shields.io/badge/GitHub-Install-informational?logo=github)](https://github.com/amisadman/aybay/releases/download/v.1.1/aybay-v.1.1.1.apk)
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Download-green?logo=google-drive)](https://drive.google.com/file/d/1BZJNr-4MvB6G4FuMN8FSBF_GAMix9G8r/view?usp=sharing)
 
 ---
 
